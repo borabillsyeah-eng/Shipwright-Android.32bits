@@ -1,0 +1,46 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Preparar Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Extrair projeto
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+          mkdir source
+          unzip -q *.zip -d source
+
+      - name: Compilar APK
+        run: |
+          GRADLEW=$(find source -name gradlew -type f | head -n 1)
+          if [ -z "$GRADLEW" ]; then
+            echo "Não foi encontrado o gradlew"
+            exit 1
+          fi
+          cd "$(dirname "$GRADLEW")"
+          chmod +x gradlew
+          ./gradlew assembleRelease --stacktrace
+
+      - name: Disponibilizar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Shipwright-APK
+          path: source/**/build/outputs/apk/**/*.apk
+          if-no-files-found: error
