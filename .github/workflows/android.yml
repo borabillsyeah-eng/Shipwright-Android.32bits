@@ -38,6 +38,14 @@ jobs:
           fi
           sed -i 's#gradle-[0-9.]*-bin.zip#gradle-8.11.1-all.zip#' "$WRAPPER"
 
+      - name: Baixar dependências do projeto
+        run: |
+          cd source/Shipwright-Android-9.0.2P2
+          rm -rf libultraship OTRExporter ZAPDTR
+          git clone --depth 1 --branch mm https://github.com/Waterdish/libultraship.git libultraship
+          git clone --depth 1 --branch android_main https://github.com/Waterdish/OTRExporter.git OTRExporter
+          git clone --depth 1 --branch mm https://github.com/Waterdish/ZAPDTR.git ZAPDTR
+
       - name: Compilar APK
         run: |
           GRADLEW=$(find source -name gradlew -type f | head -n 1)
