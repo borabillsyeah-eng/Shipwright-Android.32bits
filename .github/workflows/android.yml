@@ -28,12 +28,12 @@ jobs:
           sudo apt-get install -y unzip
           mkdir source
           unzip -q *.zip -d source
-               
+
       - name: Verificar arquitetura
         run: |
           find source -name "build.gradle" -o -name "build.gradle.kts"
           grep -RniE 'abiFilters|ANDROID_ABI|APP_ABI|arm64-v8a|armeabi-v7a' source --include='*.gradle' --include='*.kts' --include='CMakeLists.txt' || true
-                
+
       - name: Atualizar versão do Gradle
         run: |
           WRAPPER=$(find source -path "*/gradle/wrapper/gradle-wrapper.properties" -type f | head -n 1)
@@ -47,9 +47,9 @@ jobs:
         run: |
           cd source/Shipwright-Android-9.0.2P2
           rm -rf libultraship OTRExporter ZAPDTR
-          git clone --depth 1 --branch mm https://github.com/Waterdish/libultraship.git libultraship
-          git clone --depth 1 --branch android_main https://github.com/Waterdish/OTRExporter.git OTRExporter
-          git clone --depth 1 --branch mm https://github.com/Waterdish/ZAPDTR.git ZAPDTR
+          git clone --depth 1 --branch 9.0.2 https://github.com/Waterdish/libultraship.git libultraship
+          git clone --depth 1 --branch 9.0.2 https://github.com/Waterdish/OTRExporter.git OTRExporter
+          git clone --depth 1 --branch soh https://github.com/Waterdish/ZAPDTR.git ZAPDTR
 
       - name: Compilar APK
         run: |
